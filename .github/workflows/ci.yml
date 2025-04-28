@@ -9,6 +9,10 @@ on:
 jobs:
   flutter_ci:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src  # ระบุให้รันทุกคำสั่งที่โฟลเดอร์ src
+    
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -28,5 +32,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./src/coverage/lcov.info  # ต้องแก้ path ของไฟล์ coverage ด้วย
           fail_ci_if_error: true
