@@ -1,45 +1,71 @@
-# Miscellaneous
+# ------------------- Miscellaneous -------------------
 *.class
 *.log
 *.pyc
 *.swp
 .DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+*.tmp
+*~
 
-# IntelliJ related
+# ---------------- IDE / Editor ----------------
+.atom/
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
+.vscode/
+*.suo
+*.lock
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
+# ---------------- Flutter / Dart ----------------
 **/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+**/generated_plugin_registrant.dart
+.packages
 .pub-cache/
 .pub/
 /build/
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
+/ios/Pods/                   # iOS CocoaPods :contentReference[oaicite:5]{index=5}
+/ios/Runner/GeneratedPluginRegistrant.*  
+/android/.gradle/
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ---------------- Environment / Secrets ----------------
+.env                   # dotenv files :contentReference[oaicite:6]{index=6}
+.env.*.local
+*.env
+*.secret
+config/keys.js
+secrets.json
+# Firebase/FlutterFire generated configs :contentReference[oaicite:7]{index=7}
+firebase_options.dart
+**/ios/Runner/GoogleService-Info.plist
+**/android/app/google-services.json
+
+# ---------------- Android specific ----------------
+**/android/**/gradle-wrapper.jar
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties   # keystore properties :contentReference[oaicite:8]{index=8}
+*.jks
+local.properties
+
+# ---------------- Certificates / Keys ----------------
+*.pem
+*.key
+*.crt
+
+# ---------------- Version control dirs ----------------
+.svn/
+migrate_working_dir/
+
+# ---------------- Other generated ----------------
+.history
+.build/
+.buildlog/
