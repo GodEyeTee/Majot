@@ -1,0 +1,3 @@
+coverage_trend:
+  min_coverage: 80 # กำหนดค่า coverage ขั้นต่ำ 80%
+  decreasing_allowed: false # ไม่อนุญาตให้ค่า coverage ลดลง
