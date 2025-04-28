@@ -1,0 +1,19 @@
+# .github/CODEOWNERS
+
+# 1) ทีม DevOps ดูแลทั้งรีโป
+*                               @your-org/devops-team
+
+# 2) โมดูล Hotel Booking 
+/feature/hotel_booking/        @your-org/hotel-team
+
+# 3) โมดูล Shopping 
+/feature/shopping/             @your-org/shopping-team
+
+# 4) โมดูล Profile 
+/feature/profile/              @your-org/profile-team
+
+# 5) โมดูล Admin Dashboard 
+/feature/admin_dashboard/      @your-org/admin-team
+
+# 6) Config, CI/CD workflow, scripts
+.github/                        @your-org/devops-team

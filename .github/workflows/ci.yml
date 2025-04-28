@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4           # ดึงโค้ดจาก repo :contentReference[oaicite:3]{index=3}
+      - uses: subosito/flutter-action@v2    # ติดตั้ง Flutter SDK :contentReference[oaicite:4]{index=4}
+
+  analyze:
+    needs: setup
+    steps:
+      - run: flutter analyze               # Static analysis ตรวจ error ด้าน syntax & lint :contentReference[oaicite:5]{index=5}
+
+  test:
+    needs: analyze
+    steps:
+      - run: flutter test --coverage       # รัน unit & widget tests พร้อมเก็บ coverage :contentReference[oaicite:6]{index=6}
+
+  coverage-report:
+    needs: test
+    steps:
+      - uses: codecov/codecov-action@v3     # อัปโหลด coverage ไปยัง Codecov.io :contentReference[oaicite:7]{index=7}
