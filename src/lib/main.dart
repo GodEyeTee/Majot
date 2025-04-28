@@ -1,242 +1,122 @@
 import 'package:flutter/material.dart';
 
-class RelaxPage extends StatefulWidget {
-  const RelaxPage({Key? key}) : super(key: key);
-
-  @override
-  State<RelaxPage> createState() => _RelaxPageState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _RelaxPageState extends State<RelaxPage> {
-  final int _totalPages = 3;
-  int _currentPage = 0;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F0E7), // Cream background color
-      body: SafeArea(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
-          children: [
-            // Back and Skip buttons
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, size: 20),
-                    onPressed: () {
-                      // Handle back button press
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Handle skip button press
-                    },
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Main content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    // Title
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Relax',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E293B),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    // Lorem ipsum text
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Main illustration
-                    Expanded(
-                      child: Center(
-                        child: RelaxIllustration(),
-                      ),
-                    ),
-
-                    // Page indicator dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _totalPages,
-                        (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _currentPage == index
-                                ? const Color(0xFF1E293B)
-                                : Colors.grey.shade300,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Next button
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 30),
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFF1E293B),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 2,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _currentPage = (_currentPage + 1) % _totalPages;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
-
-// Custom widget for the relaxation illustration
-class RelaxIllustration extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(MediaQuery.of(context).size.width, 300),
-      painter: RelaxScenePainter(),
-    );
-  }
-}
-
-// Custom painter to draw the relaxation scene
-class RelaxScenePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint();
-
-    // Draw sofa/couch (main area)
-    paint.color = const Color(0xFFFF9B6B); // Orange couch color
-    final RRect couch = RRect.fromRectAndRadius(
-      Rect.fromLTWH(size.width * 0.1, size.height * 0.4, size.width * 0.8,
-          size.height * 0.25),
-      const Radius.circular(15),
-    );
-    canvas.drawRRect(couch, paint);
-
-    // Draw coffee table
-    paint.color = const Color(0xFFD2915B); // Wooden table color
-    final RRect table = RRect.fromRectAndRadius(
-      Rect.fromLTWH(size.width * 0.25, size.height * 0.7, size.width * 0.5,
-          size.height * 0.1),
-      const Radius.circular(10),
-    );
-    canvas.drawRRect(table, paint);
-
-    // Draw person
-    paint.color = const Color(0xFFFF9CAE); // Skin tone
-    final Rect personBody = Rect.fromLTWH(size.width * 0.3, size.height * 0.3,
-        size.width * 0.4, size.height * 0.2);
-    canvas.drawOval(personBody, paint);
-
-    // Draw head
-    final Rect head = Rect.fromLTWH(size.width * 0.45, size.height * 0.2,
-        size.width * 0.1, size.height * 0.1);
-    canvas.drawOval(head, paint);
-
-    // Draw plant
-    paint.color = const Color(0xFF4CAF50); // Green
-    final Rect plantTop = Rect.fromLTWH(size.width * 0.1, size.height * 0.2,
-        size.width * 0.1, size.height * 0.1);
-    canvas.drawOval(plantTop, paint);
-
-    // Draw plant pot
-    paint.color = const Color(0xFFBF8A6B); // Pot color
-    final Rect plantPot = Rect.fromLTWH(size.width * 0.1, size.height * 0.3,
-        size.width * 0.1, size.height * 0.1);
-    canvas.drawRect(plantPot, paint);
-
-    // Draw side table
-    paint.color = const Color(0xFFD2915B); // Wooden table color
-    final Rect sideTable = Rect.fromLTWH(size.width * 0.7, size.height * 0.3,
-        size.width * 0.2, size.height * 0.2);
-    canvas.drawRect(sideTable, paint);
-
-    // Draw book/objects on side table
-    paint.color = Colors.blue.shade200;
-    canvas.drawRect(
-        Rect.fromLTWH(size.width * 0.75, size.height * 0.32, size.width * 0.1,
-            size.height * 0.03),
-        paint);
-    paint.color = Colors.red.shade200;
-    canvas.drawRect(
-        Rect.fromLTWH(size.width * 0.75, size.height * 0.36, size.width * 0.1,
-            size.height * 0.03),
-        paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
-// Usage example
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: RelaxPage(),
-  ));
 }
