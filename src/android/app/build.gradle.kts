@@ -23,16 +23,13 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.majot"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // minSdk = flutter.minSdkVersion  <-- Comment หรือลบบรรทัดนี้
-        minSdk = 23                        // <-- เพิ่มบรรทัดนี้เพื่อกำหนด minSdk เป็น 23
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         ndkVersion = "27.0.12077973"
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -42,6 +39,11 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies {
+    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 }
 
 flutter {

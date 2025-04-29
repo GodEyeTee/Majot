@@ -16,7 +16,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Project stucjture
-"""src/
+```src/
 ├── lib/
 │   ├── core/                      # Core modules
 │   │   ├── config/                # แยกเป็น folder เฉพาะสำหรับ config
@@ -54,4 +54,4 @@ samples, guidance on mobile development, and a full API reference.
 │   │       ├── data/
 │   │       ├── domain/
 │   │       └── presentation/
-│   └── main.dart"""
+│   └── main.dart```
