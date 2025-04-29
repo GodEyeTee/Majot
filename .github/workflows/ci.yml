@@ -14,17 +14,57 @@ jobs:
         working-directory: ./src  # ระบุให้รันทุกคำสั่งที่โฟลเดอร์ src
     
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.29.3'
           channel: 'stable'
+      
+      - name: Verify Flutter installation
+        run: flutter --version
+      
+      - name: Create assets directory if not exists
+        run: |
+          mkdir -p assets/images
+      
+      - name: Create Firebase configuration from secrets
+        run: |
+          cat > lib/firebase_options.dart << 'EOL'
+          ${{ secrets.FIREBASE_OPTIONS_CONTENT }}
+          EOL
+          
+          # ตรวจสอบว่าไฟล์ถูกสร้าง
+          if [ -f lib/firebase_options.dart ]; then
+            echo "Firebase configuration file created successfully."
+          else
+            echo "Failed to create Firebase configuration file."
+            exit 1
+          fi
       
       - name: Install dependencies
         run: flutter pub get
       
       - name: Analyze code
         run: flutter analyze
+      
+      - name: Fix 'avoid_unnecessary_containers' issues
+        run: |
+          if grep -q "avoid_unnecessary_containers" lib/pages/auths/register.dart; then
+            echo "Fixing unnecessary Container issue in register.dart..."
+            # สำรองไฟล์ต้นฉบับก่อน
+            cp lib/pages/auths/register.dart lib/pages/auths/register.dart.bak
+            
+            # แก้ไขไฟล์ - เอา Container ที่ไม่จำเป็นออก
+            # ตัวอย่างการแก้ไขด้วย sed (คุณอาจต้องปรับแก้คำสั่งนี้ตามโครงสร้างไฟล์จริง)
+            sed -i 's/Container(\s*child: \([^)]*\),\s*)/\1/g' lib/pages/auths/register.dart
+            
+            echo "Fixed unnecessary Container issue."
+          else
+            echo "No unnecessary Container issue found or register.dart not found."
+          fi
       
       - name: Run tests
         run: flutter test --coverage
@@ -33,5 +73,13 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./src/coverage/lcov.info  # ต้องแก้ path ของไฟล์ coverage ด้วย
+          file: ./src/coverage/lcov.info
           fail_ci_if_error: true
+      
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./src/coverage/lcov.info
+          base-path: ./src
+          flag-name: unit

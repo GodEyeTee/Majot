@@ -9,13 +9,38 @@ jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-      - run: flutter build apk --release    # หรือ ios :contentReference[oaicite:11]{index=11}
-      - run: |
-          mkdir release
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: 'stable'
+      
+      - name: Create assets directory if not exists
+        run: |
+          mkdir -p assets/images
+      
+      - name: Create Firebase configuration from secrets
+        run: |
+          cat > lib/firebase_options.dart << 'EOL'
+          ${{ secrets.FIREBASE_OPTIONS_CONTENT }}
+          EOL
+      
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Build Android APK
+        run: flutter build apk --release
+      
+      - name: Prepare release files
+        run: |
+          mkdir -p release
           cp build/app/outputs/flutter-apk/app-release.apk release/
-      - uses: actions/upload-artifact@v3     # เก็บ artifact สำหรับดาวน์โหลด
+      
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v3
         with:
           name: app-release
           path: release/

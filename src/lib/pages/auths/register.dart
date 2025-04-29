@@ -14,24 +14,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         title: const Text("Sign Up"),
       ),
-      body: Container(
-        child: Form(
-            child: Column(
-          children: [
-            const Text(
-              'E-mail',
-              style: TextStyle(fontSize: 20),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              obscureText: false,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-          ],
-        )),
-      ),
+      body: Form(
+          child: Column(
+        children: [
+          const Text(
+            'E-mail',
+            style: TextStyle(fontSize: 20),
+          ),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            obscureText: false,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+        ],
+      )),
     );
   }
 }
