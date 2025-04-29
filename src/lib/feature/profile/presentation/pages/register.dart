@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:majot/blocs/auth/auth_bloc.dart';
+import 'package:majot/core/config/localization/localization.dart';
+import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -9,9 +10,9 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Sign Up",
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Text(
+          context.l10n.signUp,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,

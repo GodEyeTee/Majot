@@ -1,0 +1,17 @@
+{
+  "@@locale": "th",
+  "appTitle": "หมาจด",
+  "signIn": "เข้าสู่ระบบ",
+  "signUp": "สมัครสมาชิก",
+  "welcome": "ยินดีต้อนรับ",
+  "welcomeBack": "ยินดีต้อนรับกลับมา",
+  "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
+  "signUpWithGoogle": "สมัครสมาชิกด้วย Google",
+  "successfullySignedIn": "เข้าสู่ระบบสำเร็จ!",
+  "settings": "ตั้งค่า",
+  "language": "ภาษา",
+  "theme": "ธีม",
+  "darkMode": "โหมดมืด",
+  "lightMode": "โหมดสว่าง",
+  "systemMode": "ตามระบบ"
+}

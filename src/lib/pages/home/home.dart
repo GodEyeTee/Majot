@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:majot/blocs/auth/auth_bloc.dart';
-import 'package:majot/pages/auths/login.dart';
-import 'package:majot/pages/auths/register.dart';
+import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
+import 'package:majot/feature/profile/presentation/pages/login.dart';
+import 'package:majot/feature/profile/presentation/pages/register.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

@@ -1,0 +1,9 @@
+arb-dir: lib/core/config/localization/l10n
+template-arb-file: intl_en.arb        
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+preferred-supported-locales:
+  - en
+  - th
+use-deferred-loading: false
+synthetic-package: false         

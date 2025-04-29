@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:majot/main.dart';
-import 'package:majot/repositories/auth_repository.dart';
+import 'package:majot/feature/profile/data/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';

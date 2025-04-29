@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "appTitle": "Majot",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "welcome": "Welcome",
+  "welcomeBack": "Welcome back",
+  "signInWithGoogle": "Sign in with Google",
+  "signUpWithGoogle": "Sign up with Google",
+  "successfullySignedIn": "Successfully signed in!",
+  "settings": "Settings",
+  "language": "Language",
+  "theme": "Theme",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "systemMode": "System Mode"
+}

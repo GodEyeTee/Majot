@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:majot/blocs/auth/auth_bloc.dart';
+import 'package:majot/core/config/localization/localization.dart';
+import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -111,9 +112,9 @@ class LoginScreen extends StatelessWidget {
             width: 24,
           ),
           const SizedBox(width: 12),
-          const Text(
-            'Sign in with Google',
-            style: TextStyle(
+          Text(
+            context.l10n.signInWithGoogle,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
