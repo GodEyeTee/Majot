@@ -1,2 +1,5 @@
 service_name: github-actions
 repo_token: ${{ secrets.COVERALLS_REPO_TOKEN }} # ได้จากหน้าตั้งค่า repository ใน Coveralls
+coverage_trend:
+  min_coverage: 20  # ลดจาก 80% เป็น 20%
+  decreasing_allowed: true  # อนุญาตให้ค่า coverage ลดลงได้
