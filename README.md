@@ -16,45 +16,54 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Project stucjture
-```src/
-├── lib/
-│   ├── core/                      # Core modules
-│   │   ├── config/                # แยกเป็น folder เฉพาะสำหรับ config
-│   │   │   ├── theme/             # Theme config
-│   │   │   └── localization/      # Localization config
-│   │   ├── permissions/           # RBAC
-│   │   │   └── role_manager.dart
-│   │   ├── utils/                 # Utilities
-│   │   └── widgets/               # Common widgets
-│   ├── feature/                   # Features
-│   │   ├── hotel_booking/
-│   │   │   ├── data/
-│   │   │   ├── domain/
-│   │   │   └── presentation/
-│   │   ├── shopping/
-│   │   │   ├── data/
-│   │   │   ├── domain/
-│   │   │   └── presentation/
-│   │   ├── profile/
-│   │   │   ├── data/
-│   │   │   │   └── repositories/
-│   │   │   │       └── auth_repository.dart
-│   │   │   ├── domain/
-│   │   │   │   ├── entities/
-│   │   │   │   │   └── profile.dart
-│   │   │   │   └── usecases/
-│   │   │   └── presentation/
-│   │   │       ├── blocs/
-│   │   │       │   └── auth_bloc.dart
-│   │   │       └── pages/
-│   │   │           ├── login.dart
-│   │   │           ├── register.dart
-│   │   │           └── settings_screen.dart
-│   │   └── admin_dashboard/
-│   │       ├── data/
-│   │       ├── domain/
-│   │       └── presentation/
-│   └── main.dart
+```lib/
+├── core/                           # Core utilities and infrastructure
+│   ├── api/                        # API services & configurations
+│   ├── bloc/                       # Base bloc implementations
+│   ├── cache/                      # Caching mechanisms
+│   ├── constant/                   # App constants
+│   ├── errors/                     # Error handling
+│   ├── extensions/                 # Extension methods
+│   ├── network/                    # Network utilities
+│   ├── themes/                     # App theming
+│   ├── usecases/                   # Base usecase interfaces
+│   └── utils/                      # Utility functions
+│       └── app_config_loader.dart  # Your existing config loader
+│
+├── features/                       # Feature modules
+│   ├── auth/                       # Authentication feature
+│   │   ├── data/                   # Data layer
+│   │   │   ├── datasources/        # Data sources
+│   │   │   │   ├── firebase_auth_data_source.dart
+│   │   │   │   └── supabase_user_data_source.dart
+│   │   │   ├── models/             # Data models
+│   │   │   │   └── user_model.dart
+│   │   │   └── repositories/       # Repository implementations
+│   │   │       └── auth_repository_impl.dart
+│   │   ├── domain/                 # Domain layer
+│   │   │   ├── entities/           # Business entities
+│   │   │   │   └── user.dart
+│   │   │   ├── repositories/       # Repository interfaces
+│   │   │   │   └── auth_repository.dart
+│   │   │   └── usecases/           # Business logic
+│   │   │       ├── sign_in_with_google.dart
+│   │   │       └── sign_out.dart
+│   │   └── presentation/           # Presentation layer
+│   │       ├── bloc/               # State management
+│   │       │   ├── auth_bloc.dart
+│   │       │   ├── auth_event.dart
+│   │       │   └── auth_state.dart
+│   │       ├── pages/              # UI pages
+│   │       │   └── login_page.dart
+│   │       └── widgets/            # UI components
+│
+├── routes/                         # Navigation routing
+│   └── routes.dart                 # Updated router configuration
+│
+├── widgets/                        # Shared widgets
+│
+├── app.dart                        # App configuration
+└── main.dart                       # Application entry point
 ```
 
 ## 1. สถาปัตยกรรมซอฟต์แวร์ (Modular + Feature-First)
