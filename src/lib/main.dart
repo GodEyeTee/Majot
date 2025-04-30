@@ -6,13 +6,14 @@ import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
 import 'package:majot/feature/profile/data/repositories/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '../core/config/localization/l10n/app_localizations.dart';
+import 'package:majot/core/config/localization/l10n/app_localizations.dart';
 import 'firebase_options.dart';
-import 'package:majot/pages/home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:majot/core/config/localization/localization.dart';
 import 'package:majot/core/config/theme/app_themes.dart';
+import 'package:majot/core/permissions/role_manager.dart';
+import 'package:majot/core/widgets/main_app_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +42,9 @@ void main() async {
   // Create theme service
   final themeService = ThemeService(prefs);
 
+  // Create role manager
+  final roleManager = RoleManager();
+
   // Run app with ProviderScope for Riverpod
   runApp(
     ProviderScope(
@@ -48,11 +52,13 @@ void main() async {
         // Override providers with actual implementations
         localizationServiceProvider.overrideWithValue(localizationService),
         themeServiceProvider.overrideWithValue(themeService),
+        roleManagerProvider.overrideWithValue(roleManager),
       ],
       child: MyApp(
         authRepository: authRepository,
         firebaseAuth: firebaseAuth,
         googleSignIn: googleSignIn,
+        roleManager: roleManager,
       ),
     ),
   );
@@ -64,10 +70,12 @@ class MyApp extends ConsumerWidget {
     required this.authRepository,
     required this.firebaseAuth,
     required this.googleSignIn,
+    required this.roleManager,
   });
   final AuthRepository authRepository;
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
+  final RoleManager roleManager;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,7 +123,7 @@ class MyApp extends ConsumerWidget {
           darkTheme: getDarkTheme(),
           themeMode: themeMode,
 
-          home: const HomePage(),
+          home: MainAppScaffold(roleManager: roleManager),
         ),
       ),
     );

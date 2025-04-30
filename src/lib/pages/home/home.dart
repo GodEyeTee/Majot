@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:majot/core/config/localization/localization.dart';
+import 'package:majot/core/widgets/bottom_navbar.dart';
 import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
 import 'package:majot/feature/profile/presentation/pages/login.dart';
 import 'package:majot/feature/profile/presentation/pages/register.dart';
@@ -11,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Majot'),
+        title: Text(context.l10n.appTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -19,7 +21,7 @@ class HomePage extends StatelessWidget {
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthSuccess) {
-            // If user is authenticated, show welcome message with sign out button
+            // If user is authenticated, show welcome message
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -75,9 +77,9 @@ class HomePage extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                   const SizedBox(height: 32),
-                  const Text(
-                    'Welcome to Majot',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.welcome,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -102,7 +104,7 @@ class HomePage extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.person_add),
-                    label: const Text('Sign Up'),
+                    label: Text(context.l10n.signUp),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       foregroundColor: Colors.white,
@@ -124,7 +126,8 @@ class HomePage extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Already have an account? Sign In'),
+                    label:
+                        Text('Already have an account? ${context.l10n.signIn}'),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.deepPurple,
                     ),
@@ -135,6 +138,7 @@ class HomePage extends StatelessWidget {
           );
         },
       ),
+      bottomNavigationBar: const BottomNavbar(),
     );
   }
 }
