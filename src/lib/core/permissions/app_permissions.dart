@@ -1,171 +1,123 @@
-/// Defines all possible permissions within the application
-///
-/// This enum follows the principle of granular permission control,
-/// where each permission represents a specific action rather than
-/// a general capability.
+/// Permissions for the application
 enum AppPermission {
-  // Authentication permissions
-  login,
-  register,
-  resetPassword,
-
-  // Content access permissions
-  viewPublicContent,
-  viewUserContent,
-
-  // Profile permissions
-  viewOwnProfile,
-  editOwnProfile,
-
-  // Hotel booking permissions
+  // Hotel Module Permissions
   viewHotels,
-  searchHotels,
   bookHotel,
-  cancelBooking,
-  viewBookingHistory,
-
-  // Shopping permissions
-  viewProducts,
-  addToCart,
-  checkout,
-  viewOrderHistory,
-
-  // Administrative permissions
-  manageUsers,
+  viewOwnBookings,
+  cancelOwnBooking,
+  viewAllBookings,
   manageHotels,
+
+  // Shopping Module Permissions
+  viewProducts,
+  purchaseProducts,
+  viewOwnOrders,
+  cancelOwnOrder,
+  viewAllOrders,
   manageProducts,
-  viewMetrics,
+  manageOrders,
 
-  // System permissions
-  accessAdminPanel,
-  configureSystem;
+  // Profile Module Permissions
+  editOwnProfile,
+  changeSettings,
+  viewProfiles,
+  editProfiles,
 
-  /// Human-readable display name for the permission
-  String get displayName {
-    switch (this) {
-      // Authentication
-      case AppPermission.login:
-        return 'Sign in to account';
-      case AppPermission.register:
-        return 'Create new account';
-      case AppPermission.resetPassword:
-        return 'Reset password';
-
-      // Content access
-      case AppPermission.viewPublicContent:
-        return 'View public content';
-      case AppPermission.viewUserContent:
-        return 'View member content';
-
-      // Profile
-      case AppPermission.viewOwnProfile:
-        return 'View own profile';
-      case AppPermission.editOwnProfile:
-        return 'Edit own profile';
-
-      // Hotel
-      case AppPermission.viewHotels:
-        return 'View available hotels';
-      case AppPermission.searchHotels:
-        return 'Search for hotels';
-      case AppPermission.bookHotel:
-        return 'Book hotel rooms';
-      case AppPermission.cancelBooking:
-        return 'Cancel hotel bookings';
-      case AppPermission.viewBookingHistory:
-        return 'View booking history';
-
-      // Shopping
-      case AppPermission.viewProducts:
-        return 'View products';
-      case AppPermission.addToCart:
-        return 'Add items to cart';
-      case AppPermission.checkout:
-        return 'Complete purchases';
-      case AppPermission.viewOrderHistory:
-        return 'View order history';
-
-      // Admin
-      case AppPermission.manageUsers:
-        return 'Manage user accounts';
-      case AppPermission.manageHotels:
-        return 'Manage hotel listings';
-      case AppPermission.manageProducts:
-        return 'Manage product listings';
-      case AppPermission.viewMetrics:
-        return 'View system metrics';
-
-      // System
-      case AppPermission.accessAdminPanel:
-        return 'Access admin dashboard';
-      case AppPermission.configureSystem:
-        return 'Configure system settings';
-    }
-  }
-
-  /// Category grouping for the permission
-  PermissionCategory get category {
-    switch (this) {
-      case AppPermission.login:
-      case AppPermission.register:
-      case AppPermission.resetPassword:
-        return PermissionCategory.authentication;
-
-      case AppPermission.viewPublicContent:
-      case AppPermission.viewUserContent:
-        return PermissionCategory.content;
-
-      case AppPermission.viewOwnProfile:
-      case AppPermission.editOwnProfile:
-        return PermissionCategory.profile;
-
-      case AppPermission.viewHotels:
-      case AppPermission.searchHotels:
-      case AppPermission.bookHotel:
-      case AppPermission.cancelBooking:
-      case AppPermission.viewBookingHistory:
-        return PermissionCategory.hotel;
-
-      case AppPermission.viewProducts:
-      case AppPermission.addToCart:
-      case AppPermission.checkout:
-      case AppPermission.viewOrderHistory:
-        return PermissionCategory.shopping;
-
-      case AppPermission.manageUsers:
-      case AppPermission.manageHotels:
-      case AppPermission.manageProducts:
-      case AppPermission.viewMetrics:
-      case AppPermission.accessAdminPanel:
-      case AppPermission.configureSystem:
-        return PermissionCategory.administration;
-    }
-  }
+  // Admin Dashboard Permissions
+  viewDashboard,
+  viewReports,
+  manageSystem,
+  manageUsers,
+  assignRoles
 }
 
-/// Categories to group related permissions
-enum PermissionCategory {
-  authentication,
-  content,
-  profile,
-  hotel,
-  shopping,
-  administration;
-
-  String get displayName {
+/// Extension methods for AppPermission
+extension AppPermissionExt on AppPermission {
+  /// Returns the module that this permission belongs to
+  String get module {
     switch (this) {
-      case PermissionCategory.authentication:
-        return 'Authentication';
-      case PermissionCategory.content:
-        return 'Content';
-      case PermissionCategory.profile:
-        return 'Profile';
-      case PermissionCategory.hotel:
-        return 'Hotel';
-      case PermissionCategory.shopping:
-        return 'Shopping';
-      case PermissionCategory.administration:
-        return 'Administration';
+      case AppPermission.viewHotels:
+      case AppPermission.bookHotel:
+      case AppPermission.viewOwnBookings:
+      case AppPermission.cancelOwnBooking:
+      case AppPermission.viewAllBookings:
+      case AppPermission.manageHotels:
+        return 'hotel_booking';
+
+      case AppPermission.viewProducts:
+      case AppPermission.purchaseProducts:
+      case AppPermission.viewOwnOrders:
+      case AppPermission.cancelOwnOrder:
+      case AppPermission.viewAllOrders:
+      case AppPermission.manageProducts:
+      case AppPermission.manageOrders:
+        return 'shopping';
+
+      case AppPermission.editOwnProfile:
+      case AppPermission.changeSettings:
+      case AppPermission.viewProfiles:
+      case AppPermission.editProfiles:
+        return 'profile';
+
+      case AppPermission.viewDashboard:
+      case AppPermission.viewReports:
+      case AppPermission.manageSystem:
+      case AppPermission.manageUsers:
+      case AppPermission.assignRoles:
+        return 'admin_dashboard';
+    }
+  }
+
+  /// Returns a human-readable description of this permission
+  String get description {
+    switch (this) {
+      case AppPermission.viewHotels:
+        return 'View available hotels';
+      case AppPermission.bookHotel:
+        return 'Book a hotel room';
+      case AppPermission.viewOwnBookings:
+        return 'View your own bookings';
+      case AppPermission.cancelOwnBooking:
+        return 'Cancel your own booking';
+      case AppPermission.viewAllBookings:
+        return 'View all user bookings';
+      case AppPermission.manageHotels:
+        return 'Manage hotel information';
+
+      case AppPermission.viewProducts:
+        return 'View products for sale';
+      case AppPermission.purchaseProducts:
+        return 'Purchase products';
+      case AppPermission.viewOwnOrders:
+        return 'View your own orders';
+      case AppPermission.cancelOwnOrder:
+        return 'Cancel your own order';
+      case AppPermission.viewAllOrders:
+        return 'View all user orders';
+      case AppPermission.manageProducts:
+        return 'Manage product information';
+      case AppPermission.manageOrders:
+        return 'Manage order status and processing';
+
+      case AppPermission.editOwnProfile:
+        return 'Edit your own profile';
+      case AppPermission.changeSettings:
+        return 'Change app settings';
+      case AppPermission.viewProfiles:
+        return 'View other user profiles';
+      case AppPermission.editProfiles:
+        return 'Edit other user profiles';
+
+      case AppPermission.viewDashboard:
+        return 'View admin dashboard';
+      case AppPermission.viewReports:
+        return 'View system reports';
+      case AppPermission.manageSystem:
+        return 'Manage system settings';
+      case AppPermission.manageUsers:
+        return 'Manage user accounts';
+      case AppPermission.assignRoles:
+        return 'Assign roles to users';
     }
   }
 }

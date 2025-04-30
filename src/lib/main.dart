@@ -6,14 +6,14 @@ import 'package:majot/feature/profile/presentation/blocs/auth_bloc.dart';
 import 'package:majot/feature/profile/data/repositories/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:majot/core/config/localization/l10n/app_localizations.dart';
+import 'core/config/localization/l10n/app_localizations.dart';
+import 'core/permissions/role_manager_provider.dart';
 import 'firebase_options.dart';
+import 'package:majot/core/widgets/main_app_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:majot/core/config/localization/localization.dart';
 import 'package:majot/core/config/theme/app_themes.dart';
-import 'package:majot/core/permissions/role_manager.dart';
-import 'package:majot/core/widgets/main_app_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,37 +28,47 @@ void main() async {
 
   // Create auth instances
   final firebaseAuth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
+  final googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ],
+  );
 
-  // Create auth repository
+  // Create ProviderContainer for Riverpod
+  final container = ProviderContainer(
+    overrides: [
+      // Override providers with actual implementations
+      localizationServiceProvider.overrideWithValue(
+        LocalizationService(prefs),
+      ),
+      themeServiceProvider.overrideWithValue(
+        ThemeService(prefs),
+      ),
+    ],
+  );
+
+  // Initialize role manager
+  initializeRoleManager(container, prefs, firebaseAuth);
+
+  // Get the role manager from the container
+  final roleManager = container.read(roleManagerProvider);
+
+  // Create auth repository with role manager
   final authRepository = AuthRepository(
     firebaseAuth: firebaseAuth,
     googleSignIn: googleSignIn,
+    roleManager: roleManager,
   );
 
-  // Create localization service
-  final localizationService = LocalizationService(prefs);
-
-  // Create theme service
-  final themeService = ThemeService(prefs);
-
-  // Create role manager
-  final roleManager = RoleManager();
-
-  // Run app with ProviderScope for Riverpod
+  // Run app with ProviderScope
   runApp(
     ProviderScope(
-      overrides: [
-        // Override providers with actual implementations
-        localizationServiceProvider.overrideWithValue(localizationService),
-        themeServiceProvider.overrideWithValue(themeService),
-        roleManagerProvider.overrideWithValue(roleManager),
-      ],
+      parent: container,
       child: MyApp(
         authRepository: authRepository,
         firebaseAuth: firebaseAuth,
         googleSignIn: googleSignIn,
-        roleManager: roleManager,
       ),
     ),
   );
@@ -70,12 +80,10 @@ class MyApp extends ConsumerWidget {
     required this.authRepository,
     required this.firebaseAuth,
     required this.googleSignIn,
-    required this.roleManager,
   });
   final AuthRepository authRepository;
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
-  final RoleManager roleManager;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -123,7 +131,8 @@ class MyApp extends ConsumerWidget {
           darkTheme: getDarkTheme(),
           themeMode: themeMode,
 
-          home: MainAppScaffold(roleManager: roleManager),
+          // ใช้ MainAppScaffold แทน HomePage
+          home: const MainAppScaffold(),
         ),
       ),
     );

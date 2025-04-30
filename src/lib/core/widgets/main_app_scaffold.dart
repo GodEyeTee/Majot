@@ -1,116 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:majot/core/permissions/role_manager.dart';
+import 'package:majot/core/widgets/app_drawer.dart';
 import 'package:majot/core/widgets/bottom_navbar.dart';
 import 'package:majot/feature/admin_dashboard/presentation/pages/admin_dashboard_screen.dart';
 import 'package:majot/feature/hotel_booking/presentation/pages/hotel_list_screen.dart';
 import 'package:majot/feature/profile/presentation/pages/profile_screen.dart';
-import 'package:majot/feature/shopping/presentation/pages/shopping_screen.dart';
 import 'package:majot/pages/home/home.dart';
 
-/// Main application scaffold providing a consistent layout for the app
-/// with bottom navigation and role-based access control
+// Provider สำหรับจัดการหน้าปัจจุบัน
+final currentPageProvider = StateProvider<Widget>((ref) => const HomePage());
+
 class MainAppScaffold extends ConsumerWidget {
   const MainAppScaffold({
-    required this.roleManager,
-    super.key,
-  });
+    Key? key,
+    this.initialIndex = 0,
+  }) : super(key: key);
 
-  final RoleManager roleManager;
+  final int initialIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Get the current navigation index from our provider
-    final selectedIndex = ref.watch(bottomNavProvider);
+    final selectedIndex = ref.watch(selectedNavIndexProvider);
+    final currentPage = ref.watch(currentPageProvider);
 
-    // Determine which body content to display based on the selected index
-    Widget bodyContent = _buildBodyContent(selectedIndex, context);
+    // ตรวจสอบ initialIndex ตอนสร้าง widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (initialIndex != selectedIndex) {
+        ref.read(selectedNavIndexProvider.notifier).state = initialIndex;
+        _updatePageForIndex(ref, initialIndex);
+      }
+    });
 
     return Scaffold(
-      body: bodyContent,
-      bottomNavigationBar:
-          _buildBottomNavigationBar(context, ref, selectedIndex),
-    );
-  }
+      // AppBar แสดงชื่อแอปและปุ่มเปิด Drawer
+      appBar: AppBar(
+        title: const Text('Majot'),
+        centerTitle: true,
+      ),
 
-  /// Builds the main content area based on the selected navigation item
-  Widget _buildBodyContent(int selectedIndex, BuildContext context) {
-    // Check role-based access for admin pages
-    final bool canAccessAdmin =
-        roleManager.canAccess(AppFeature.adminDashboard);
+      // Drawer Menu
+      drawer: const AppDrawer(),
 
-    switch (selectedIndex) {
-      case 0:
-        return const HomePage(); // Home is accessible to all
-      case 1:
-        if (roleManager.canAccess(AppFeature.hotelBooking)) {
-          return const HotelListScreen();
-        }
-        return _buildUnauthorizedScreen(context);
-      case 2:
-        if (roleManager.canAccess(AppFeature.shopping)) {
-          return const ShoppingScreen();
-        }
-        return _buildUnauthorizedScreen(context);
-      case 3:
-        if (roleManager.canAccess(AppFeature.profile)) {
-          return const ProfileScreen();
-        }
-        return _buildUnauthorizedScreen(context);
-      case 4:
-        if (canAccessAdmin) {
-          return const AdminDashboardScreen();
-        }
-        return _buildUnauthorizedScreen(context);
-      default:
-        return const HomePage();
-    }
-  }
+      // เนื้อหาหน้าจอปัจจุบัน
+      body: currentPage,
 
-  /// Builds the unauthorized access screen with option to go back to home
-  Widget _buildUnauthorizedScreen(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.lock_outline,
-            size: 80,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Unauthorized Access',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'You do not have permission to access this feature.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () {
-              // Navigate back to home screen
-              // Using provider to change the selected index to 0 (home)
-            },
-            child: const Text('Back to Home'),
-          ),
-        ],
+      // Bottom Navigation Bar
+      bottomNavigationBar: MajotBottomNavBar(
+        onTabSelected: (index) => _updatePageForIndex(ref, index),
       ),
     );
   }
 
-  /// Builds the bottom navigation bar
-  Widget _buildBottomNavigationBar(
-      BuildContext context, WidgetRef ref, int selectedIndex) {
-    return const BottomNavbar();
+  // อัปเดตหน้าปัจจุบันตาม index ที่เลือก
+  void _updatePageForIndex(WidgetRef ref, int index) {
+    final newPage = _getPageForIndex(index);
+    ref.read(currentPageProvider.notifier).state = newPage;
+  }
+
+  // สร้างหน้าตาม index
+  Widget _getPageForIndex(int index) {
+    switch (index) {
+      case 0:
+        return const HomePage();
+      case 1:
+        return const HotelListScreen();
+      case 2:
+        return const Scaffold(
+            body: Center(child: Text('หน้าช้อปปิ้ง'))); // ตัวอย่างหน้าช้อปปิ้ง
+      case 3:
+        return const AdminDashboardScreen();
+      case 4:
+        return const ProfileScreen(); // ต้องสร้างหน้า ProfileScreen
+      default:
+        return const HomePage();
+    }
   }
 }

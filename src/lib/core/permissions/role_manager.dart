@@ -1,152 +1,111 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Defines possible application roles for RBAC (Role-Based Access Control)
-enum AppRole {
-  guest,
-  user,
-  admin,
-  superAdmin;
+import 'app_permissions.dart';
+import 'app_roles.dart';
 
-  String get displayName {
-    switch (this) {
-      case AppRole.guest:
-        return 'Guest';
-      case AppRole.user:
-        return 'User';
-      case AppRole.admin:
-        return 'Administrator';
-      case AppRole.superAdmin:
-        return 'Super Administrator';
-    }
+/// Central service for managing roles and permissions in the application
+class RoleManager extends ChangeNotifier {
+  RoleManager({
+    required this.prefs,
+    required this.firebaseAuth,
+  }) {
+    _initializeFromAuth();
+    firebaseAuth.authStateChanges().listen((_) {
+      _initializeFromAuth();
+    });
   }
-}
 
-/// Manages role-based permissions throughout the application
-class RoleManager {
-  RoleManager({this.defaultRole = AppRole.guest});
+  final SharedPreferences prefs;
+  final FirebaseAuth firebaseAuth;
+  AppRole _currentRole = AppRole.user; // Default role is user
 
-  /// Default role for unauthenticated users
-  final AppRole defaultRole;
-
-  /// Current user role - defaults to guest until authenticated
-  AppRole _currentRole = AppRole.guest;
-
-  /// Get the current user role
+  /// Current user role
   AppRole get currentRole => _currentRole;
 
-  /// Set the user role based on authentication state or admin action
-  void setRole(AppRole role) {
-    _currentRole = role;
+  /// Current user ID (or null if not authenticated)
+  String? get currentUserId => firebaseAuth.currentUser?.uid;
+
+  /// Returns true if the current user has the specified permission
+  bool hasPermission(AppPermission permission) {
+    return _currentRole.permissions.contains(permission);
   }
 
-  /// Reset the role to default (typically used during logout)
-  void resetRole() {
-    _currentRole = defaultRole;
+  /// Returns true if the current user has any of the specified permissions
+  bool hasAnyPermission(List permissions) {
+    return permissions.any((permission) => hasPermission(permission));
   }
 
-  /// Check if current role has specific permission
-  bool hasPermission(Permission permission) {
-    switch (_currentRole) {
-      case AppRole.guest:
-        return _guestPermissions.contains(permission);
-      case AppRole.user:
-        return _userPermissions.contains(permission);
-      case AppRole.admin:
-        return _adminPermissions.contains(permission);
-      case AppRole.superAdmin:
-        return true; // Super admin has all permissions
+  /// Returns true if the current user has all of the specified permissions
+  bool hasAllPermissions(List permissions) {
+    return permissions.every((permission) => hasPermission(permission));
+  }
+
+  /// Returns true if the current user has the specified role
+  bool hasRole(AppRole role) {
+    return _currentRole == role;
+  }
+
+  /// Returns true if the current user has any of the specified roles
+  bool hasAnyRole(List roles) {
+    return roles.contains(_currentRole);
+  }
+
+  /// Set the current user role
+  Future setRole(AppRole role) async {
+    if (_currentRole != role) {
+      _currentRole = role;
+      await _saveRole();
+      notifyListeners();
     }
   }
 
-  /// Check if the current role can access a specific feature
-  bool canAccess(AppFeature feature) {
-    switch (_currentRole) {
-      case AppRole.guest:
-        return _guestFeatures.contains(feature);
-      case AppRole.user:
-        return _userFeatures.contains(feature);
-      case AppRole.admin:
-        return true; // Admin can access all features except superadmin ones
-      case AppRole.superAdmin:
-        return true; // Super admin can access all features
+  /// Initialize role from either Firebase user claims or local storage
+  Future _initializeFromAuth() async {
+    final user = firebaseAuth.currentUser;
+
+    if (user == null) {
+      // If no user, set to default role
+      _currentRole = AppRole.user;
+      notifyListeners();
+      return;
     }
+
+    try {
+      // Try to get role from Firebase user claims
+      await user.getIdTokenResult(true).then((idTokenResult) {
+        final claims = idTokenResult.claims;
+        if (claims != null && claims['role'] != null) {
+          final roleStr = claims['role'] as String;
+          _currentRole = AppRole.values.firstWhere(
+            (role) => role.name == roleStr,
+            orElse: () => AppRole.user,
+          );
+        } else {
+          // Fallback to stored preferences
+          _loadRoleFromPrefs(user.uid);
+        }
+      });
+    } catch (e) {
+      // Fallback to stored preferences on error
+      _loadRoleFromPrefs(user.uid);
+    }
+
+    notifyListeners();
   }
 
-  // Permission definitions for different roles
-  static const Set<Permission> _guestPermissions = {
-    Permission.viewPublicContent,
-    Permission.login,
-    Permission.register,
-  };
+  /// Load role from shared preferences
+  void _loadRoleFromPrefs(String userId) {
+    final roleIndex = prefs.getInt('user_role:$userId') ?? AppRole.user.index;
+    _currentRole = AppRole.values[roleIndex];
+  }
 
-  static const Set<Permission> _userPermissions = {
-    Permission.viewPublicContent,
-    Permission.viewUserProfile,
-    Permission.editOwnProfile,
-    Permission.viewHotels,
-    Permission.bookHotel,
-    Permission.viewShoppingItems,
-    Permission.purchaseItems,
-    Permission.logout,
-  };
-
-  static const Set<Permission> _adminPermissions = {
-    Permission.viewPublicContent,
-    Permission.viewUserProfile,
-    Permission.editOwnProfile,
-    Permission.viewHotels,
-    Permission.bookHotel,
-    Permission.viewShoppingItems,
-    Permission.purchaseItems,
-    Permission.manageUsers,
-    Permission.manageContent,
-    Permission.viewMetrics,
-    Permission.logout,
-  };
-
-  // Feature access definitions
-  static const Set<AppFeature> _guestFeatures = {
-    AppFeature.authentication,
-    AppFeature.publicContent,
-  };
-
-  static const Set<AppFeature> _userFeatures = {
-    AppFeature.authentication,
-    AppFeature.publicContent,
-    AppFeature.profile,
-    AppFeature.hotelBooking,
-    AppFeature.shopping,
-  };
+  /// Save role to shared preferences
+  Future _saveRole() async {
+    final userId = currentUserId;
+    if (userId != null) {
+      await prefs.setInt('user_role:$userId', _currentRole.index);
+    }
+  }
 }
-
-/// Application permissions
-enum Permission {
-  viewPublicContent,
-  login,
-  register,
-  viewUserProfile,
-  editOwnProfile,
-  viewHotels,
-  bookHotel,
-  viewShoppingItems,
-  purchaseItems,
-  manageUsers,
-  manageContent,
-  viewMetrics,
-  logout,
-}
-
-/// Application features
-enum AppFeature {
-  authentication,
-  publicContent,
-  profile,
-  hotelBooking,
-  shopping,
-  adminDashboard,
-}
-
-/// Provider for the RoleManager
-final roleManagerProvider = Provider<RoleManager>((ref) {
-  return RoleManager();
-});
