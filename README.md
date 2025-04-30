@@ -1,19 +1,11 @@
 # Majot
 
-A new Flutter project.
+multifuntion aplication
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+RBAC have 3 role :admin,editor,user
+have main 3 future :hotel system,store shopping system, ocr scaner reader
 
 ## Project stucjture
 ```lib/
