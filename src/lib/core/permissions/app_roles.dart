@@ -1,7 +1,7 @@
 import 'app_permissions.dart';
 
 /// Roles for the application
-enum AppRole { user, staff, admin }
+enum AppRole { user, editor, admin }
 
 /// Extension methods for AppRole
 extension AppRoleExt on AppRole {
@@ -27,20 +27,23 @@ extension AppRoleExt on AppRole {
           AppPermission.changeSettings,
         };
 
-      case AppRole.staff:
+      case AppRole.editor:
         return {
           // All user permissions
           ...AppRole.user.permissions,
 
           // Additional hotel permissions
           AppPermission.viewAllBookings,
+          AppPermission.manageHotels,
 
           // Additional shopping permissions
           AppPermission.viewAllOrders,
           AppPermission.manageOrders,
+          AppPermission.manageProducts,
 
           // Additional profile permissions
           AppPermission.viewProfiles,
+          AppPermission.editProfiles,
         };
 
       case AppRole.admin:
@@ -54,8 +57,8 @@ extension AppRoleExt on AppRole {
     switch (this) {
       case AppRole.user:
         return 'ผู้ใช้ทั่วไป';
-      case AppRole.staff:
-        return 'พนักงาน';
+      case AppRole.editor:
+        return 'ผู้แก้ไข';
       case AppRole.admin:
         return 'ผู้ดูแลระบบ';
     }
@@ -66,8 +69,8 @@ extension AppRoleExt on AppRole {
     switch (this) {
       case AppRole.user:
         return 'ผู้ใช้ทั่วไปที่มีสิทธิ์พื้นฐาน';
-      case AppRole.staff:
-        return 'พนักงานที่มีสิทธิ์ในการดูแลลูกค้า';
+      case AppRole.editor:
+        return 'ผู้แก้ไขที่มีสิทธิ์ในการจัดการข้อมูล';
       case AppRole.admin:
         return 'ผู้ดูแลระบบที่มีสิทธิ์ทั้งหมด';
     }

@@ -7,12 +7,13 @@ import 'package:majot/feature/profile/presentation/pages/profile_screen.dart';
 import 'package:majot/feature/shopping/presentation/pages/shopping_screen.dart';
 import 'package:majot/pages/home/home.dart';
 
+// ใช้ selectedNavIndexProvider จาก bottom_navbar.dart แทน
 class MainLayout extends ConsumerWidget {
   const MainLayout({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(bottomNavProvider);
+    final selectedIndex = ref.watch(selectedNavIndexProvider);
 
     // Return the appropriate screen based on the selected index
     return IndexedStack(
@@ -21,8 +22,8 @@ class MainLayout extends ConsumerWidget {
         HomePage(),
         HotelListScreen(),
         ShoppingScreen(),
-        ProfileScreen(),
         AdminDashboardScreen(),
+        ProfileScreen(),
       ],
     );
   }

@@ -46,7 +46,7 @@ class AnyPermissionWidget extends ConsumerWidget {
   });
 
   /// The permissions - any one of which allows viewing the child widget
-  final List permissions;
+  final List<AppPermission> permissions;
 
   /// The widget to show if the user has any of the required permissions
   final Widget child;

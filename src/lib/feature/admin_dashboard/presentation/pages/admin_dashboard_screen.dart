@@ -39,7 +39,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavbar(),
+      bottomNavigationBar: const BottomNavbar(), // ใช้ alias
     );
   }
 }

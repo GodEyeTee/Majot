@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:majot/core/config/localization/localization.dart';
 import 'package:majot/core/config/theme/app_themes.dart';
+import 'package:majot/core/services/secure_storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,9 @@ void main() async {
 
   // Initialize SharedPreferences
   final prefs = await SharedPreferences.getInstance();
+
+  // Initialize SecureStorage
+  final secureStorage = SecureStorageService();
 
   // Create auth instances
   final firebaseAuth = FirebaseAuth.instance;

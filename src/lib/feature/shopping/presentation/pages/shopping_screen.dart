@@ -14,7 +14,7 @@ class ShoppingScreen extends ConsumerWidget {
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(
               Icons.shopping_bag,
               size: 80,
@@ -39,7 +39,7 @@ class ShoppingScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavbar(),
+      bottomNavigationBar: const BottomNavbar(), // ใช้ alias
     );
   }
 }

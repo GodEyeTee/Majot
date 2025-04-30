@@ -33,12 +33,12 @@ class RoleManager extends ChangeNotifier {
   }
 
   /// Returns true if the current user has any of the specified permissions
-  bool hasAnyPermission(List permissions) {
+  bool hasAnyPermission(List<AppPermission> permissions) {
     return permissions.any((permission) => hasPermission(permission));
   }
 
   /// Returns true if the current user has all of the specified permissions
-  bool hasAllPermissions(List permissions) {
+  bool hasAllPermissions(List<AppPermission> permissions) {
     return permissions.every((permission) => hasPermission(permission));
   }
 
@@ -48,12 +48,12 @@ class RoleManager extends ChangeNotifier {
   }
 
   /// Returns true if the current user has any of the specified roles
-  bool hasAnyRole(List roles) {
+  bool hasAnyRole(List<AppRole> roles) {
     return roles.contains(_currentRole);
   }
 
   /// Set the current user role
-  Future setRole(AppRole role) async {
+  Future<void> setRole(AppRole role) async {
     if (_currentRole != role) {
       _currentRole = role;
       await _saveRole();
@@ -62,7 +62,7 @@ class RoleManager extends ChangeNotifier {
   }
 
   /// Initialize role from either Firebase user claims or local storage
-  Future _initializeFromAuth() async {
+  Future<void> _initializeFromAuth() async {
     final user = firebaseAuth.currentUser;
 
     if (user == null) {
@@ -102,7 +102,7 @@ class RoleManager extends ChangeNotifier {
   }
 
   /// Save role to shared preferences
-  Future _saveRole() async {
+  Future<void> _saveRole() async {
     final userId = currentUserId;
     if (userId != null) {
       await prefs.setInt('user_role:$userId', _currentRole.index);

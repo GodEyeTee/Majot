@@ -167,3 +167,6 @@ class MajotBottomNavBar extends ConsumerWidget {
     }
   }
 }
+
+// เพิ่ม alias สำหรับความสะดวกในการใช้งาน
+typedef BottomNavbar = MajotBottomNavBar;
